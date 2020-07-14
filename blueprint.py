@@ -56,4 +56,8 @@ def test_config(config):
         except tweepy.TweepError:
             errors.append("Invalid authentication Data!")
 
+    if "teamsound_notifier" in config:
+        if config["teamsound_clients"] == "":
+            errors.append("Clients could not be empty!")
+
     return errors

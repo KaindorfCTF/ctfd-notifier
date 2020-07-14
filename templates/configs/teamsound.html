@@ -1,0 +1,26 @@
+<div role="tabpanel" class="tab-pane config-section" id="teamsound">
+	<form method="POST" autocomplete="off" class="w-100">
+        <div class="form-group">
+            <label>
+                Enable Teamsound Notifier
+            </label>
+            <select class="form-control custom-select" name="teamsound_notifier">
+                <option value="true" {% if config.get("teamsound_notifier") == "true" %}selected{% endif %}>True</option>
+                <option value="false" {% if config.get("teamsound_notifier") == "false" %}selected{% endif %}>False</option>
+            </select>
+        </div>
+        <div class="form-group">
+			<label>
+				Teamsound Clients
+                <small class="form-text text-muted">
+					IP Address of the clients. 10.80.X.100 were X is the subnet, which is usually the team id.
+				</small>
+			</label>
+			</label>
+			<input type="text" class="form-control" id="teamsound-clients" name="teamsound_clients" value="{{ config.get("teamsound_clients") }}">
+        </div>
+
+        <input type="hidden" value="{{ nonce }}" name="nonce" id="nonce" />
+        <button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>

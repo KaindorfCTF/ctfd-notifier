@@ -14,7 +14,9 @@ class DBUtils:
         {"key": "twitter_consumer_secret", "value": ""},
         {"key": "twitter_access_token", "value": ""},
         {"key": "twitter_access_token_secret", "value": ""},
-        {"key": "twitter_hashtags", "value": ""}
+        {"key": "twitter_hashtags", "value": ""},
+        {"key": "teamsound_notifier", "value": "true"},
+        {"key": "teamsound_clients", "value": "10.80.X.100"}
     ]
 
     @staticmethod

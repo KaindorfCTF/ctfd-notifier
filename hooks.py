@@ -4,6 +4,7 @@ from .db_utils import DBUtils
 from ...utils.modes import get_model
 
 import json
+import socket
 import tweepy
 import requests as rq
 
@@ -36,6 +37,19 @@ def twitter_notify(solve, consumer_key, consumer_secret, access_token, access_to
         print(e)
 
 
+def teamsound_notify(solve, teamsound_clients):
+    def _play_teamsound(id):
+        client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        client_sock.settimeout(2)
+
+        try:
+            client_sock.connect((teamsound_clients.replace("X", solve.user_id), 1338))
+            message = b'kdctf_play'
+            client_sock.sendall(message)
+        finally:
+            print('closing socket')
+            client_sock.close()
+
 def on_solve(mapper, conn, solve):
     config = DBUtils.get_config()
     solves = _getSolves(solve.challenge_id)
@@ -48,6 +62,9 @@ def on_solve(mapper, conn, solve):
             twitter_notify(solve, config.get("twitter_consumer_key"), config.get("twitter_consumer_secret"),
                            config.get("twitter_access_token"), config.get("twitter_access_token_secret"),
                            config.get("twitter_hashtags"))
+
+    if config.get("teamsound_notifier") == "true":
+        teamsound_notify(config.get("teamsound_clients"))
 
 
 def _getSolves(challenge_id):
