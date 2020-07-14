@@ -1,0 +1,53 @@
+<div role="tabpanel" class="tab-pane config-section" id="twitter">
+    <form method="POST" autocomplete="off" class="w-100">
+        <div class="form-group">
+            <label>
+                Enable Twitter Notifier
+            </label>
+            <select class="form-control custom-select" name="twitter_notifier">
+                <option value="true" {% if config.get("twitter_notifier") == "true" %}selected{% endif %}>True</option>
+                <option value="false" {% if config.get("twitter_notifier") == "false" %}selected{% endif %}>False</option>
+            </select>
+        </div>
+        <div class="form-group">
+			<label>
+				Consumer Key
+			</label>
+			<input type="text" class="form-control" id="twitter-consumer-key" name="twitter_consumer_key" value="{{ config.get("twitter_consumer_key") }}">
+        </div>
+
+        <div class="form-group">
+			<label>
+				Consumer Secret
+			</label>
+			<input type="text" class="form-control" id="twitter-consumer-secret" name="twitter_consumer_secret" value="{{ config.get("twitter_consumer_secret") }}">
+        </div>
+
+        <div class="form-group">
+			<label>
+				Access Token
+			</label>
+			<input type="text" class="form-control" id="twitter-access-token" name="twitter_access_token" value="{{ config.get("twitter_access_token") }}">
+        </div>
+
+        <div class="form-group">
+			<label>
+				Access Token Secret
+			</label>
+			<input type="text" class="form-control" id="twitter-access-token-secret" name="twitter_access_token_secret" value="{{ config.get("twitter_access_token_secret") }}">
+        </div>
+
+        <div class="form-group">
+			<label>
+				Hashtags
+                <small class="form-text text-muted">
+					Hashtags to add to the Tweet
+				</small>
+			</label>
+			<input type="text" class="form-control" id="twitter-hashtags" name="twitter_hashtags" value="{{ config.get("twitter_hashtags") }}">
+        </div>
+
+        <input type="hidden" value="{{ nonce }}" name="nonce" id="nonce" />
+        <button type="submit" class="btn btn-md btn-primary float-right">Update</button>
+	</form>
+</div>
