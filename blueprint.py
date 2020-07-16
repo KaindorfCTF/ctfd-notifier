@@ -13,7 +13,7 @@ def load_bp(plugin_route):
     @admins_only
     def get_config():
         config = DBUtils.get_config()
-        return render_template("config.html", config=config)
+        return render_template("ctfd_notifier/config.html", config=config)
 
     @notifier_bp.route(plugin_route, methods=["POST"])
     @admins_only
@@ -24,10 +24,10 @@ def load_bp(plugin_route):
         errors = test_config(config)
 
         if len(errors) > 0:
-            return render_template("config.html", config=DBUtils.get_config(), errors=errors)
+            return render_template("ctfd_notifier/config.html", config=DBUtils.get_config(), errors=errors)
         else:
             DBUtils.save_config(config.items())
-            return render_template("config.html", config=DBUtils.get_config())
+            return render_template("ctfd_notifier/config.html", config=DBUtils.get_config())
 
     return notifier_bp
 
