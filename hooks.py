@@ -7,6 +7,7 @@ import json
 import socket
 import tweepy
 import requests as rq
+import CTFd.cache as cache
 
 
 def discord_notify(solve, webhookurl):
@@ -38,17 +39,17 @@ def twitter_notify(solve, consumer_key, consumer_secret, access_token, access_to
 
 
 def teamsound_notify(solve, teamsound_clients):
-    def _play_teamsound(id):
-        client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        client_sock.settimeout(2)
+    client_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_sock.settimeout(2)
 
-        try:
-            client_sock.connect((teamsound_clients.replace("X", solve.user_id), 1338))
-            message = b'kdctf_play'
-            client_sock.sendall(message)
-        finally:
-            print('closing socket')
-            client_sock.close()
+    try:
+        client_sock.connect((teamsound_clients.replace("X", solve.user_id), 1338))
+        message = b'kdctf_play'
+        client_sock.sendall(message)
+    finally:
+        print('closing socket')
+        client_sock.close()
+
 
 def on_solve(mapper, conn, solve):
     config = DBUtils.get_config()
@@ -92,7 +93,9 @@ def _getUser(user_id):
     user = Users.query.filter_by(id=user_id).first()
     return user
 
-def _getText(solve, hashtags=None):
+
+def _getText(solve, hashtags=""):
+    cache.clear_standings()
     user = _getUser(solve.user_id)
     challenge = _getChallenge(solve.challenge_id)
 
@@ -105,6 +108,7 @@ def _getText(solve, hashtags=None):
         text = f"{user.name} got first blood on {challenge.name} and is now in {place} place with {score} points!"
 
     return text
+
 
 def load_hooks():
     listen(Solves, "after_insert", on_solve)

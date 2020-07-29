@@ -20,7 +20,7 @@
 			<input type="text" class="form-control" id="teamsound-clients" name="teamsound_clients" value="{{ config.get("teamsound_clients") }}">
         </div>
 
-        <input type="hidden" value="{{ nonce }}" name="nonce" id="nonce" />
+        <input type="hidden" value="{{ Session.nonce }}" name="nonce" id="nonce" />
         <button type="submit" class="btn btn-md btn-primary float-right">Update</button>
 	</form>
 </div>
