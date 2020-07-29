@@ -2,6 +2,7 @@ from sqlalchemy.event import listen
 from CTFd.models import Users, Solves, Challenges
 from .db_utils import DBUtils
 from ...utils.modes import get_model
+import CTFd.cache as cache
 
 import json
 import tweepy
@@ -77,6 +78,7 @@ def _getUser(user_id):
 
 
 def _getText(solve, hashtags=""):
+    cache.clear_standings()
     user = _getUser(solve.user_id)
     challenge = _getChallenge(solve.challenge_id)
 
