@@ -2,6 +2,7 @@ from sqlalchemy.event import listen
 from CTFd.models import Users, Solves, Challenges
 from .db_utils import DBUtils
 from ...utils.modes import get_model
+import CTFd.cache as cache
 
 import json
 import tweepy
@@ -75,7 +76,9 @@ def _getUser(user_id):
     user = Users.query.filter_by(id=user_id).first()
     return user
 
-def _getText(solve, hashtags=None):
+
+def _getText(solve, hashtags=""):
+    cache.clear_standings()
     user = _getUser(solve.user_id)
     challenge = _getChallenge(solve.challenge_id)
 
@@ -88,6 +91,7 @@ def _getText(solve, hashtags=None):
         text = f"{user.name} got first blood on {challenge.name} and is now in {place} place with {score} points!"
 
     return text
+
 
 def load_hooks():
     listen(Solves, "after_insert", on_solve)
