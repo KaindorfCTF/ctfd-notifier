@@ -3,6 +3,9 @@ This is a Plugin for the popular CTF Platform [CTFd](https://github.com/CTFd/CTF
 
 The Plugin is fully configurable in the backend! If you have any feature requests leave an issue :)
 
+# Requirements
+CTFd >= 3.0.0
+
 ## Screenshots
 ![Discord Settings](screenshots/screen_settings_discord.jpeg)
 
