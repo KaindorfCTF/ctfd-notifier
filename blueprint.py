@@ -37,7 +37,8 @@ def test_config(config):
     if "discord_notifier" in config:
         webhookurl = config["discord_webhook_url"]
 
-        if not webhookurl.startswith("https://discordapp.com/api/webhooks/"):
+        if not webhookurl.startswith("https://discordapp.com/api/webhooks/") \
+           and not webhookurl.startswith("https://discord.com/api/webhooks"):
             errors.append("Invalid Webhook URL!")
         else:
             try:
