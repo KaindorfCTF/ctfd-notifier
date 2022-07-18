@@ -13,7 +13,6 @@ def load_bp(plugin_route):
     @admins_only
     def get_config():
         config = DBUtils.get_config()
-        print(config)
         return render_template("ctfd_notifier/config.html", config=config)
 
     @notifier_bp.route(plugin_route, methods=["POST"])
