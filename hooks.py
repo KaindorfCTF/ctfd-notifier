@@ -82,8 +82,8 @@ def _getText(solve, hashtags=""):
     user = _getUser(solve.user_id)
     challenge = _getChallenge(solve.challenge_id)
 
-    score = user.get_score(admin=True)
-    place = user.get_place(admin=True)
+    score = user.get_score()
+    place = user.get_place()
 
     if not hashtags == "":
         text = f"{user.name} got first blood on {challenge.name} and is now in {place} place with {score} points! {hashtags}"
