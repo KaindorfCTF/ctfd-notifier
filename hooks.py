@@ -1,8 +1,10 @@
 from sqlalchemy.event import listen
-from CTFd.models import Users, Solves, Challenges
+from CTFd.models import Users, Solves, Challenges, Teams
+from CTFd.utils.config import is_teams_mode
 from .db_utils import DBUtils
 from ...utils.modes import get_model
 import CTFd.cache as cache
+
 
 import json
 import tweepy
@@ -77,7 +79,13 @@ def _getUser(user_id):
     return user
 
 
+def _getTeam(team_id):
+    team = Teams.query.filter_by(id=team_id).first()
+    return team
+
+
 def _getText(solve, hashtags=""):
+    name = ""
     cache.clear_standings()
     user = _getUser(solve.user_id)
     challenge = _getChallenge(solve.challenge_id)
@@ -85,10 +93,16 @@ def _getText(solve, hashtags=""):
     score = user.get_score()
     place = user.get_place()
 
-    if not hashtags == "":
-        text = f"{user.name} got first blood on {challenge.name} and is now in {place} place with {score} points! {hashtags}"
+    if is_teams_mode():
+        team = _getTeam(user.team_id)
+        name = team.name
     else:
-        text = f"{user.name} got first blood on {challenge.name} and is now in {place} place with {score} points!"
+        name = user.name
+
+    if not hashtags == "":
+        text = f"{name} got first blood on {challenge.name} and is now in {place} place with {score} points! {hashtags}"
+    else:
+        text = f"{name} got first blood on {challenge.name} and is now in {place} place with {score} points!"
 
     return text
 
