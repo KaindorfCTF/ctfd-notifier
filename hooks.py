@@ -86,18 +86,21 @@ def _getTeam(team_id):
 
 def _getText(solve, hashtags=""):
     name = ""
+    score = 0
+    place = 0
     cache.clear_standings()
     user = _getUser(solve.user_id)
-    challenge = _getChallenge(solve.challenge_id)
-
-    score = user.get_score()
-    place = user.get_place()
+    challenge = _getChallenge(solve.challenge_id)    
 
     if is_teams_mode():
         team = _getTeam(user.team_id)
         name = team.name
+        score = team.get_score()
+        place = team.get_place()
     else:
         name = user.name
+        score = user.get_score()
+        place = user.get_place()
 
     if not hashtags == "":
         text = f"{name} got first blood on {challenge.name} and is now in {place} place with {score} points! {hashtags}"
