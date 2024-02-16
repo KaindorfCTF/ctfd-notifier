@@ -14,7 +14,10 @@ class DBUtils:
         {"key": "twitter_consumer_secret", "value": ""},
         {"key": "twitter_access_token", "value": ""},
         {"key": "twitter_access_token_secret", "value": ""},
-        {"key": "twitter_hashtags", "value": ""}
+        {"key": "twitter_hashtags", "value": ""},
+        {"key": "telegram_bot_token", "value": ""},
+        {"key": "telegram_chat_id", "value": ""},
+        {"key": "telegram_message_thread_id", "value": ""},
     ]
 
     @staticmethod
