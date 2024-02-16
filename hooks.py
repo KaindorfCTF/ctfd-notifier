@@ -9,6 +9,7 @@ from aiogram import Bot
 import json
 import tweepy
 import requests as rq
+from asyncio import run
 
 
 def discord_notify(solve, webhookurl):
@@ -42,7 +43,7 @@ def twitter_notify(solve, consumer_key, consumer_secret, access_token, access_to
 def telegram_notify(solve, token: str, chat_id: int, message_thread_id: int):
     text = _getText(solve)
     bot = Bot(token)
-    bot.send_message(chat_id, text, message_thread_id)
+    run(bot.send_message(chat_id, text, message_thread_id))
 
 
 def on_solve(mapper, conn, solve):
