@@ -4,11 +4,12 @@ from CTFd.utils.config import is_teams_mode
 from .db_utils import DBUtils
 from ...utils.modes import get_model
 import CTFd.cache as cache
-
+from aiogram import Bot
 
 import json
 import tweepy
 import requests as rq
+from asyncio import run
 
 
 def discord_notify(solve, webhookurl):
@@ -39,6 +40,12 @@ def twitter_notify(solve, consumer_key, consumer_secret, access_token, access_to
         print(e)
 
 
+def telegram_notify(solve, token: str, chat_id: int, message_thread_id: int):
+    text = _getText(solve)
+    bot = Bot(token)
+    run(bot.send_message(chat_id, text, message_thread_id))
+
+
 def on_solve(mapper, conn, solve):
     config = DBUtils.get_config()
     solves = _getSolves(solve.challenge_id)
@@ -52,18 +59,22 @@ def on_solve(mapper, conn, solve):
                            config.get("twitter_access_token"), config.get("twitter_access_token_secret"),
                            config.get("twitter_hashtags"))
 
+        if config.get("telegram_notifier") == "true":
+            telegram_notify(solve, config.get("telegram_bot_token"), config.get("telegram_chat_id"),
+                            config.get("telegram_message_thread_id"))
+
 
 def _getSolves(challenge_id):
     Model = get_model()
 
     solve_count = (
         Solves.query.join(Model, Solves.account_id == Model.id)
-            .filter(
+        .filter(
             Solves.challenge_id == challenge_id,
             Model.hidden == False,
             Model.banned == False,
         )
-            .count()
+        .count()
     )
 
     return solve_count
@@ -90,7 +101,7 @@ def _getText(solve, hashtags=""):
     place = 0
     cache.clear_standings()
     user = _getUser(solve.user_id)
-    challenge = _getChallenge(solve.challenge_id)    
+    challenge = _getChallenge(solve.challenge_id)
 
     if is_teams_mode():
         team = _getTeam(user.team_id)
