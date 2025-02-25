@@ -1,9 +1,9 @@
-from flask import request, render_template, Blueprint, abort
-from .db_utils import DBUtils
-from CTFd.utils.decorators import admins_only, authed_only
-
 import requests as rq
 import tweepy
+from CTFd.utils.decorators import admins_only
+from flask import Blueprint, render_template, request
+
+from .db_utils import DBUtils
 
 notifier_bp = Blueprint("notifier", __name__, template_folder="templates")
 
@@ -24,10 +24,14 @@ def load_bp(plugin_route):
         errors = test_config(config)
 
         if len(errors) > 0:
-            return render_template("ctfd_notifier/config.html", config=DBUtils.get_config(), errors=errors)
+            return render_template(
+                "ctfd_notifier/config.html", config=DBUtils.get_config(), errors=errors
+            )
         else:
             DBUtils.save_config(config.items())
-            return render_template("ctfd_notifier/config.html", config=DBUtils.get_config())
+            return render_template(
+                "ctfd_notifier/config.html", config=DBUtils.get_config()
+            )
 
     return notifier_bp
 
@@ -38,8 +42,9 @@ def test_config(config):
         if config["discord_notifier"]:
             webhookurl = config["discord_webhook_url"]
 
-            if not webhookurl.startswith("https://discordapp.com/api/webhooks/") \
-            and not webhookurl.startswith("https://discord.com/api/webhooks"):
+            if not webhookurl.startswith(
+                "https://discordapp.com/api/webhooks/"
+            ) and not webhookurl.startswith("https://discord.com/api/webhooks"):
                 errors.append("Invalid Webhook URL!")
             else:
                 try:
@@ -52,8 +57,14 @@ def test_config(config):
     if "twitter_notifier" in config:
         if config["twitter_notifier"]:
             try:
-                AUTH = tweepy.OAuthHandler(config.get("twitter_consumer_key"), config.get("twitter_consumer_secret"))
-                AUTH.set_access_token(config.get("twitter_access_token"), config.get("twitter_access_token_secret"))
+                AUTH = tweepy.OAuthHandler(
+                    config.get("twitter_consumer_key"),
+                    config.get("twitter_consumer_secret"),
+                )
+                AUTH.set_access_token(
+                    config.get("twitter_access_token"),
+                    config.get("twitter_access_token_secret"),
+                )
                 API = tweepy.API(AUTH)
                 API.home_timeline()
             except tweepy.TweepError:

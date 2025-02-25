@@ -1,35 +1,38 @@
-from sqlalchemy.event import listen
-from CTFd.models import Users, Solves, Challenges, Teams
-from CTFd.utils.config import is_teams_mode
-from .db_utils import DBUtils
-from ...utils.modes import get_model
-import CTFd.cache as cache
-from aiogram import Bot
-
 import json
-import tweepy
-import requests as rq
 from asyncio import run
+
+import CTFd.cache as cache
+import requests as rq
+import tweepy
+from aiogram import Bot
+from CTFd.models import Challenges, Solves, Teams, Users
+from CTFd.utils.config import is_teams_mode
+from sqlalchemy.event import listen
+
+from ...utils.modes import get_model
+from .db_utils import DBUtils
 
 
 def discord_notify(solve, webhookurl):
     text = _getText(solve)
 
-    embed = {
-        "title": "First Blood!",
-        "color": 15158332,
-        "description": text
-    }
+    embed = {"title": "First Blood!", "color": 15158332, "description": text}
 
     data = {"embeds": [embed]}
 
     try:
-        rq.post(webhookurl, data=json.dumps(data), headers={"Content-Type": "application/json"})
+        rq.post(
+            webhookurl,
+            data=json.dumps(data),
+            headers={"Content-Type": "application/json"},
+        )
     except rq.exceptions.RequestException as e:
         print(e)
 
 
-def twitter_notify(solve, consumer_key, consumer_secret, access_token, access_token_secret, hashtags):
+def twitter_notify(
+    solve, consumer_key, consumer_secret, access_token, access_token_secret, hashtags
+):
     text = _getText(solve, hashtags)
     try:
         AUTH = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -55,13 +58,22 @@ def on_solve(mapper, conn, solve):
             discord_notify(solve, config.get("discord_webhook_url"))
 
         if config.get("twitter_notifier") == "true":
-            twitter_notify(solve, config.get("twitter_consumer_key"), config.get("twitter_consumer_secret"),
-                           config.get("twitter_access_token"), config.get("twitter_access_token_secret"),
-                           config.get("twitter_hashtags"))
+            twitter_notify(
+                solve,
+                config.get("twitter_consumer_key"),
+                config.get("twitter_consumer_secret"),
+                config.get("twitter_access_token"),
+                config.get("twitter_access_token_secret"),
+                config.get("twitter_hashtags"),
+            )
 
         if config.get("telegram_notifier") == "true":
-            telegram_notify(solve, config.get("telegram_bot_token"), config.get("telegram_chat_id"),
-                            config.get("telegram_message_thread_id"))
+            telegram_notify(
+                solve,
+                config.get("telegram_bot_token"),
+                config.get("telegram_chat_id"),
+                config.get("telegram_message_thread_id"),
+            )
 
 
 def _getSolves(challenge_id):

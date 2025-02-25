@@ -1,8 +1,6 @@
-from .models import NotifierConfig
+from CTFd.models import db
 
-from CTFd.models import (
-    db
-)
+from .models import NotifierConfig
 
 
 class DBUtils:

@@ -1,9 +1,10 @@
 import json
 import os
+
 from .blueprint import load_bp
-from .models import NotifierConfig
-from .hooks import load_hooks
 from .db_utils import DBUtils
+from .hooks import load_hooks
+from .models import NotifierConfig
 
 PLUGIN_PATH = os.path.dirname(__file__)
 CONFIG = json.load(open(f"{PLUGIN_PATH}/config.json"))
